@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 100 Question Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Copperplate&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- 1. RESET & BASICS --- */
+        * { box-sizing: border-box; user-select: none; }
+        body {
+            margin: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden; 
+        }
+
+        /* --- 2. MAIN SLIDE CONTAINER --- */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: radial-gradient(circle at center, #001540 0%, #000510 100%);
+            position: relative;
+            border: 4px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(0, 60, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Background Grid Effect */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 100, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 100, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- 3. LAYOUTS --- */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Intro Screen */
+        .intro-content { text-align: center; z-index: 2; }
+        .logo-title {
+            font-family: 'Copperplate', serif;
+            font-size: 80px;
+            background: linear-gradient(to bottom, #fff, #80d8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 150, 255, 0.8);
+        }
+        .start-btn {
+            background: linear-gradient(180deg, #ffb300, #ff6f00);
+            border: 2px solid #fff;
+            color: #000;
+            font-size: 32px;
+            padding: 15px 60px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 20px #ff6f00;
+            transition: transform 0.2s;
+            margin-top: 40px;
+        }
+        .start-btn:hover { transform: scale(1.1); }
+
+        /* Game UI */
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            padding: 0 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-pill {
+            background: #000;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 25px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .question-number {
+            font-size: 24px;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 10px #0091ea;
+        }
+
+        .timer-wrapper {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .timer-text {
+            position: absolute;
+            color: #fff;
+            font-weight: bold;
+            font-size: 30px;
+        }
+        svg.timer-svg { transform: rotate(-90deg); width: 80px; height: 80px; }
+        circle { fill: none; stroke-width: 6; }
+        .c-bg { stroke: #333; }
+        .c-progress { 
+            stroke: #ff9100; 
+            stroke-dasharray: 226; 
+            stroke-dashoffset: 0; 
+            transition: stroke-dashoffset 1s linear; 
+        }
+
+        /* Question & Answers */
+        .game-area {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        .question-box {
+            background: linear-gradient(180deg, #0d47a1, #000);
+            border: 3px solid #fff;
+            border-radius: 50px;
+            width: 100%;
+            min-height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(0,145,234, 0.5);
+        }
+        
+        /* Decorative lines */
+        .question-box::before, .question-box::after {
+            content: ''; position: absolute; top: 50%; width: 100px; height: 2px; background: #fff;
+        }
+        .question-box::before { left: -100px; }
+        .question-box::after { right: -100px; }
+
+        .q-text { font-size: 32px; color: #fff; line-height: 1.3; }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background: linear-gradient(180deg, #000, #1a237e);
+            border: 2px solid #666;
+            border-radius: 40px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+        .option-btn:hover { background: linear-gradient(180deg, #1565c0, #0d47a1); border-color: #fff; }
+        
+        .option-label { color: #ffd700; font-weight: bold; font-size: 24px; margin-right: 15px; }
+        .option-text { color: #fff; font-size: 22px; }
+
+        /* Interaction States */
+        .option-btn.selected { background: #ff9100; border-color: #fff; }
+        .option-btn.correct { background: #00c853; border-color: #fff; box-shadow: 0 0 30px #00c853; animation: pulse 1s infinite; }
+        .option-btn.wrong { background: #d50000; opacity: 0.5; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 10px #00c853; } 50% { box-shadow: 0 0 30px #00c853; } 100% { box-shadow: 0 0 10px #00c853; } }
+
+        .lifelines-panel {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 20px;
+        }
+        .life-icon {
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.8;
+            cursor: pointer;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            width: 60px; height: 60px;
+            display: grid; place-items: center;
+            transition: 0.3s;
+        }
+        .life-icon:hover { transform: translateY(-5px); opacity: 1; background: rgba(255,255,255,0.1); }
+        .life-icon.used { opacity: 0.3; border-color: #555; cursor: default; position: relative; }
+        .life-icon.used::after { content: '\f00d'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: red; position: absolute; font-size: 40px; }
+
+        /* Next Button */
+        .nav-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: none; /* Hidden until answer revealed */
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.4); }
+
+        /* Results */
+        .result-score { font-size: 100px; color: #ffd700; margin: 20px 0; font-family: 'Copperplate', serif; }
+        .result-text { font-size: 24px; color: #ccc; }
+
+        /* Audio Control */
+        .mute-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- AUDIO ELEMENTS -->
+    <!-- Using Google Actions Sound Library for Demo Purposes -->
+    <!-- Loop: Industrial Hum for suspense -->
+    <audio id="bg-music" loop src="https://actions.google.com/sounds/v1/ambiences/industrial_hum.ogg"></audio>
+    <!-- Timer: Ticking Clock -->
+    <audio id="sfx-timer" loop src="https://actions.google.com/sounds/v1/alarms/mechanical_clock_ticking.ogg"></audio>
+    <!-- Lock In: Button Click -->
+    <audio id="sfx-select" src="https://actions.google.com/sounds/v1/tools/button_click.ogg"></audio>
+    <!-- Correct: Magic Chime -->
+    <audio id="sfx-correct" src="https://actions.google.com/sounds/v1/cartoon/magic_chime.ogg"></audio>
+    <!-- Wrong: Slide Whistle Down -->
+    <audio id="sfx-wrong" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle_down.ogg"></audio>
+
+    <div class="slide-container">
+        <div class="mute-btn" onclick="toggleMute()"><i id="mute-icon" class="fa-solid fa-volume-high"></i></div>
+        
+        <!-- INTRO SCREEN -->
+        <div id="intro-screen" class="screen active">
+            <div class="intro-content">
+                <div class="logo-title">QUIZ<br>MASTER</div>
+                <p style="color: #b3e5fc; font-size: 24px;">100 Question Challenge</p>
+                <button class="start-btn" onclick="startGame()">PLAY NOW</button>
+            </div>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="screen">
+            <div class="top-bar">
+                <div class="category-pill" id="category-display">General</div>
+                <div class="question-number">Q: <span id="q-num">1</span> / <span id="total-q">100</span></div>
+                <div class="timer-wrapper">
+                    <svg class="timer-svg">
+                        <circle class="c-bg" cx="40" cy="40" r="36"></circle>
+                        <circle id="timer-bar" class="c-progress" cx="40" cy="40" r="36"></circle>
+                    </svg>
+                    <div class="timer-text" id="timer-val">30</div>
+                </div>
+            </div>
+
+            <div class="game-area">
+                <div class="question-box">
+                    <div class="q-text" id="question-text">Question text goes here?</div>
+                </div>
+                <div class="answers-grid" id="answers-container">
+                    <!-- Buttons generated by JS -->
+                </div>
+            </div>
+
+            <div class="lifelines-panel">
+                <div class="life-icon" onclick="useLifeline('5050', this)" title="50:50">50:50</div>
+                <div class="life-icon" onclick="useLifeline('skip', this)" title="Skip Question"><i class="fa-solid fa-forward"></i></div>
+                <div class="life-icon" onclick="useLifeline('time', this)" title="+30 Seconds"><i class="fa-solid fa-clock"></i></div>
+            </div>
+
+            <button class="nav-btn" id="next-btn" onclick="nextQuestion()">NEXT ❯</button>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen" class="screen">
+            <h1 class="logo-title">GAME OVER</h1>
+            <div class="result-text">You scored:</div>
+            <div class="result-score"><span id="final-score">0</span> / <span id="final-total">100</span></div>
+            <button class="start-btn" onclick="location.reload()">PLAY AGAIN</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- AUDIO ENGINE ---
+        let isMuted = false;
+        const sounds = {
+            bg: document.getElementById('bg-music'),
+            timer: document.getElementById('sfx-timer'),
+            select: document.getElementById('sfx-select'),
+            correct: document.getElementById('sfx-correct'),
+            wrong: document.getElementById('sfx-wrong')
+        };
+
+        // Set volumes
+        sounds.bg.volume = 0.3; // Lower background hum
+        sounds.timer.volume = 0.5;
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('mute-icon');
+            if(isMuted) {
+                icon.classList.remove('fa-volume-high');
+                icon.classList.add('fa-volume-xmark');
+                // Pause all
+                Object.values(sounds).forEach(s => s.pause());
+            } else {
+                icon.classList.remove('fa-volume-xmark');
+                icon.classList.add('fa-volume-high');
+                // Resume ambient
+                if(document.getElementById('game-screen').classList.contains('active')) {
+                    playAudio('bg');
+                    if(timeLeft > 0 && canAnswer) playAudio('timer');
+                }
+            }
+        }
+
+        function playAudio(name) {
+            if(isMuted) return;
+            const sound = sounds[name];
+            if(sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Audio play failed (user interaction needed or blocked):", e));
+            }
+        }
+
+        function stopAudio(name) {
+            const sound = sounds[name];
+            if(sound) {
+                sound.pause();
+                sound.currentTime = 0;
+            }
+        }
+
+
+        // --- DATABASE OF 100 QUESTIONS ---
+        const questions = [
+            // --- ORIGINAL 50 ---
+            { cat: "History", q: "In which year did World War II end?", opts: ["1942", "1945", "1948", "1950"], a: 1 },
+            { cat: "Science", q: "What is the chemical symbol for Gold?", opts: ["Ag", "Au", "Fe", "Pb"], a: 1 },
+            { cat: "Geography", q: "Which is the largest ocean on Earth?", opts: ["Atlantic", "Indian", "Pacific", "Arctic"], a: 2 },
+            { cat: "Literature", q: "Who wrote 'Romeo and Juliet'?", opts: ["Dickens", "Shakespeare", "Hemingway", "Twain"], a: 1 },
+            { cat: "Movies", q: "Which movie featured the quote 'I'll be back'?", opts: ["Rocky", "Star Wars", "The Terminator", "Die Hard"], a: 2 },
+            { cat: "Music", q: "Who is known as the 'King of Pop'?", opts: ["Prince", "Elvis", "MJ", "Freddie Mercury"], a: 2 },
+            { cat: "Technology", q: "What does 'HTTP' stand for?", opts: ["HyperText Transfer Protocol", "High Tech Transfer Point", "HyperText Transmission Path", "Home Tool Transfer Page"], a: 0 },
+            { cat: "Sports", q: "How many rings are in the Olympic logo?", opts: ["4", "5", "6", "7"], a: 1 },
+            { cat: "Food", q: "Sushi traditionally comes from which country?", opts: ["China", "Korea", "Thailand", "Japan"], a: 3 },
+            { cat: "Animals", q: "Which land animal is the fastest?", opts: ["Lion", "Cheetah", "Gazelle", "Leopard"], a: 1 },
+            { cat: "Space", q: "Which planet is known as the Red Planet?", opts: ["Venus", "Mars", "Jupiter", "Saturn"], a: 1 },
+            { cat: "Geography", q: "The Eiffel Tower is located in which city?", opts: ["Berlin", "London", "Paris", "Rome"], a: 2 },
+            { cat: "History", q: "Who was the first President of the USA?", opts: ["Jefferson", "Lincoln", "Washington", "Adams"], a: 2 },
+            { cat: "Science", q: "At what temperature (Celsius) does water boil?", opts: ["90", "100", "110", "120"], a: 1 },
+            { cat: "Body", q: "What is the largest organ in the human body?", opts: ["Liver", "Heart", "Skin", "Lungs"], a: 2 },
+            { cat: "Movies", q: "Which animation studio created 'Toy Story'?", opts: ["Dreamworks", "Pixar", "Disney", "Sony"], a: 1 },
+            { cat: "Literature", q: "Who wrote the Harry Potter series?", opts: ["J.R.R. Tolkien", "C.S. Lewis", "J.K. Rowling", "Roald Dahl"], a: 2 },
+            { cat: "Music", q: "How many members were in The Beatles?", opts: ["3", "4", "5", "6"], a: 1 },
+            { cat: "General", q: "How many days are in a leap year?", opts: ["364", "365", "366", "367"], a: 2 },
+            { cat: "Science", q: "What gas do plants absorb from the atmosphere?", opts: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], a: 2 },
+            { cat: "Technology", q: "Who co-founded Microsoft?", opts: ["Steve Jobs", "Bill Gates", "Elon Musk", "Mark Zuckerberg"], a: 1 },
+            { cat: "Geography", q: "What is the capital of Italy?", opts: ["Venice", "Milan", "Naples", "Rome"], a: 3 },
+            { cat: "History", q: "The Titanic sank in which year?", opts: ["1910", "1912", "1914", "1916"], a: 1 },
+            { cat: "Animals", q: "What is a group of lions called?", opts: ["Pack", "Herd", "Pride", "School"], a: 2 },
+            { cat: "Sports", q: "In which sport would you perform a 'slam dunk'?", opts: ["Tennis", "Golf", "Basketball", "Soccer"], a: 2 },
+            { cat: "Food", q: "What is the main ingredient in Guacamole?", opts: ["Tomato", "Onion", "Avocado", "Pepper"], a: 2 },
+            { cat: "Science", q: "What is the center of an atom called?", opts: ["Proton", "Electron", "Nucleus", "Molecule"], a: 2 },
+            { cat: "Literature", q: "Who wrote '1984'?", opts: ["George Orwell", "Aldous Huxley", "Ray Bradbury", "Stephen King"], a: 0 },
+            { cat: "Geography", q: "Which continent is the Sahara Desert located in?", opts: ["Asia", "South America", "Africa", "Australia"], a: 2 },
+            { cat: "Movies", q: "Who played Jack Sparrow in Pirates of the Caribbean?", opts: ["Orlando Bloom", "Brad Pitt", "Johnny Depp", "Tom Cruise"], a: 2 },
+            { cat: "Technology", q: "What does 'www' stand for?", opts: ["World Wide Web", "World Web Wide", "Wide World Web", "Web World Wide"], a: 0 },
+            { cat: "Body", q: "How many teeth does an adult human typically have?", opts: ["28", "30", "32", "34"], a: 2 },
+            { cat: "History", q: "Who discovered America in 1492?", opts: ["Magellan", "Columbus", "Cook", "Vespucci"], a: 1 },
+            { cat: "Animals", q: "Which bird is the symbol of peace?", opts: ["Eagle", "Dove", "Swan", "Hawk"], a: 1 },
+            { cat: "Music", q: "Which instrument has 88 keys?", opts: ["Guitar", "Violin", "Piano", "Flute"], a: 2 },
+            { cat: "Geography", q: "Which country has the largest population?", opts: ["USA", "India", "China", "Russia"], a: 1 },
+            { cat: "Science", q: "What is the hardest natural substance?", opts: ["Gold", "Iron", "Diamond", "Platinum"], a: 2 },
+            { cat: "Sports", q: "Which country won the first FIFA World Cup?", opts: ["Brazil", "Argentina", "Uruguay", "Italy"], a: 2 },
+            { cat: "Food", q: "Which nut is used to make Marzipan?", opts: ["Walnut", "Peanut", "Almond", "Cashew"], a: 2 },
+            { cat: "Movies", q: "What color is the pill Neo takes in The Matrix?", opts: ["Blue", "Red", "Green", "Yellow"], a: 1 },
+            { cat: "History", q: "The Great Wall of China was built to keep out who?", opts: ["Mongols", "Romans", "Japanese", "Vikings"], a: 0 },
+            { cat: "Body", q: "What pumps blood through the body?", opts: ["Lungs", "Brain", "Heart", "Liver"], a: 2 },
+            { cat: "Technology", q: "Which company produces the iPhone?", opts: ["Samsung", "Google", "Microsoft", "Apple"], a: 3 },
+            { cat: "Animals", q: "Which mammal is known to lay eggs?", opts: ["Kangaroo", "Platypus", "Bat", "Whale"], a: 1 },
+            { cat: "Literature", q: "Who created Sherlock Holmes?", opts: ["Agatha Christie", "Arthur Conan Doyle", "Edgar Allan Poe", "Ian Fleming"], a: 1 },
+            { cat: "General", q: "Which currency is used in the UK?", opts: ["Dollar", "Euro", "Yen", "Pound"], a: 3 },
+            { cat: "Science", q: "What is the speed of light approx?", opts: ["300,000 km/s", "150,000 km/s", "1,000 km/s", "Light speed"], a: 0 },
+            { cat: "Geography", q: "Mount Everest is in which mountain range?", opts: ["Andes", "Rockies", "Alps", "Himalayas"], a: 3 },
+            { cat: "Movies", q: "Which movie features a character named 'Donkey'?", opts: ["Ice Age", "Shrek", "Madagascar", "Finding Nemo"], a: 1 },
+
+            // --- US HISTORY ---
+            { cat: "US History", q: "Who wrote the Declaration of Independence?", opts: ["Washington", "Jefferson", "Adams", "Franklin"], a: 1 },
+            { cat: "US History", q: "Which war was fought between the North and South?", opts: ["WWI", "Revolutionary War", "Civil War", "Vietnam War"], a: 2 },
+            { cat: "US History", q: "The Louisiana Purchase was bought from which country?", opts: ["Spain", "England", "France", "Russia"], a: 2 },
+            { cat: "US History", q: "Who was the first woman to fly solo across the Atlantic?", opts: ["Amelia Earhart", "Sally Ride", "Bessie Coleman", "Harriet Tubman"], a: 0 },
+            { cat: "US History", q: "Which amendment gave women the right to vote?", opts: ["1st", "13th", "19th", "21st"], a: 2 },
+            { cat: "US History", q: "The Boston Tea Party was a protest against what?", opts: ["War", "Taxes", "Slavery", "King George"], a: 1 },
+            { cat: "US History", q: "Who delivered the 'I Have a Dream' speech?", opts: ["Malcolm X", "JFK", "MLK Jr.", "Rosa Parks"], a: 2 },
+            { cat: "US History", q: "Which President signed the Emancipation Proclamation?", opts: ["Lincoln", "Grant", "Jefferson", "Jackson"], a: 0 },
+            { cat: "US History", q: "In what year did the US land on the moon?", opts: ["1959", "1965", "1969", "1972"], a: 2 },
+            { cat: "US History", q: "Which President served more than two terms?", opts: ["Washington", "Lincoln", "FDR", "Obama"], a: 2 },
+            { cat: "US History", q: "The Star-Spangled Banner was written during which war?", opts: ["Civil War", "Revolutionary War", "War of 1812", "WWI"], a: 2 },
+            { cat: "US History", q: "Who was the primary author of the US Constitution?", opts: ["Madison", "Hamilton", "Jay", "Hancock"], a: 0 },
+
+            // --- US MONUMENTS & LANDMARKS ---
+            { cat: "Landmarks", q: "The Space Needle is located in which city?", opts: ["Portland", "Seattle", "Austin", "Denver"], a: 1 },
+            { cat: "Landmarks", q: "Where is the Liberty Bell located?", opts: ["Boston", "New York", "Philadelphia", "Washington DC"], a: 2 },
+            { cat: "Landmarks", q: "The Gateway Arch is in which state?", opts: ["California", "Missouri", "Utah", "Nevada"], a: 1 },
+            { cat: "Landmarks", q: "Which dam forms Lake Mead?", opts: ["Glen Canyon", "Grand Coulee", "Hoover Dam", "Folsom"], a: 2 },
+            { cat: "Landmarks", q: "The Alamo is a historic mission in which city?", opts: ["Dallas", "Houston", "El Paso", "San Antonio"], a: 3 },
+            { cat: "Landmarks", q: "Where is the Lincoln Memorial located?", opts: ["New York", "Philadelphia", "Washington D.C.", "Richmond"], a: 2 },
+            { cat: "Landmarks", q: "Grand Canyon National Park is in which state?", opts: ["Nevada", "Colorado", "Arizona", "New Mexico"], a: 2 },
+            { cat: "Landmarks", q: "Mount Rushmore features the faces of how many presidents?", opts: ["3", "4", "5", "6"], a: 1 },
+            { cat: "Landmarks", q: "Which bridge connects San Francisco to Marin County?", opts: ["Brooklyn", "Golden Gate", "London", "Bay Bridge"], a: 1 },
+            { cat: "Landmarks", q: "The White House is located at what address?", opts: ["10 Downing St", "1600 Pennsylvania Ave", "221B Baker St", "Wall St"], a: 1 },
+            { cat: "Landmarks", q: "Where is Pearl Harbor National Memorial?", opts: ["California", "Florida", "Hawaii", "Guam"], a: 2 },
+            { cat: "Landmarks", q: "Cloud Gate (The Bean) is in which city?", opts: ["St. Louis", "Chicago", "Toronto", "Seattle"], a: 1 },
+
+            // --- HINDU CULTURE ---
+            { cat: "Hinduism", q: "Which festival celebrates the bond between brothers and sisters?", opts: ["Diwali", "Holi", "Raksha Bandhan", "Navratri"], a: 2 },
+            { cat: "Hinduism", q: "Who is the god of destruction in the Trimurti?", opts: ["Brahma", "Vishnu", "Shiva", "Indra"], a: 2 },
+            { cat: "Hinduism", q: "The Ramayana tells the story of which Prince?", opts: ["Krishna", "Arjuna", "Rama", "Ganesha"], a: 2 },
+            { cat: "Hinduism", q: "Which river is considered most sacred in Hinduism?", opts: ["Yamuna", "Ganges", "Saraswati", "Narmada"], a: 1 },
+            { cat: "Hinduism", q: "What does 'Namaste' literally mean?", opts: ["Hello", "Peace", "I bow to you", "Welcome"], a: 2 },
+            { cat: "Hinduism", q: "Who is the monkey god and devotee of Rama?", opts: ["Ganesha", "Hanuman", "Kartikeya", "Garuda"], a: 1 },
+            { cat: "Hinduism", q: "The Vedas are written in which ancient language?", opts: ["Hindi", "Tamil", "Pali", "Sanskrit"], a: 3 },
+            { cat: "Hinduism", q: "Which goddess represents knowledge and music?", opts: ["Lakshmi", "Durga", "Saraswati", "Kali"], a: 2 },
+            { cat: "Hinduism", q: "Kumbh Mela is a major pilgrimage gathering at which location type?", opts: ["Mountains", "River banks", "Forests", "Deserts"], a: 1 },
+            { cat: "Hinduism", q: "Which deity is known as the 'Preserver'?", opts: ["Shiva", "Vishnu", "Brahma", "Ganesh"], a: 1 },
+            { cat: "Hinduism", q: "Diwali commemorates the return of Lord Rama to which city?", opts: ["Lanka", "Ayodhya", "Mathura", "Kashi"], a: 1 },
+            { cat: "Hinduism", q: "What is the holy symbol representing the universe?", opts: ["Swastika", "Om", "Lotus", "Trishul"], a: 1 },
+            { cat: "Hinduism", q: "Which epic contains the Bhagavad Gita?", opts: ["Ramayana", "Mahabharata", "Vedas", "Upanishads"], a: 1 },
+
+            // --- BOLLYWOOD & TOLLYWOOD (2015-2025) ---
+            { cat: "Movies", q: "Which movie features the song 'Naatu Naatu'?", opts: ["Pushpa", "KGF", "RRR", "Baahubali"], a: 2 },
+            { cat: "Movies", q: "Who played the lead role in 'Pathaan'?", opts: ["Salman Khan", "Shah Rukh Khan", "Aamir Khan", "Hrithik Roshan"], a: 1 },
+            { cat: "Movies", q: "'Baahubali: The Conclusion' was released in which year?", opts: ["2015", "2016", "2017", "2018"], a: 2 },
+            { cat: "Movies", q: "Which movie is a biography of wrestler Mahavir Singh Phogat?", opts: ["Sultan", "Dangal", "Chak De", "Lagaan"], a: 1 },
+            { cat: "Movies", q: "Who directed the movie 'RRR'?", opts: ["Karan Johar", "S.S. Rajamouli", "Sanjay Leela Bhansali", "Rohit Shetty"], a: 1 },
+            { cat: "Movies", q: "'K.G.F: Chapter 2' stars which actor as Rocky?", opts: ["Prabhas", "Yash", "Ram Charan", "NTR Jr"], a: 1 },
+            { cat: "Movies", q: "Which 2023 movie features the character 'Tara Singh'?", opts: ["Pathaan", "Jawan", "Gadar 2", "Animal"], a: 2 },
+            { cat: "Movies", q: "'Pushpa: The Rise' popularized which actor's mannerism?", opts: ["Mahesh Babu", "Allu Arjun", "Vijay", "Dhanush"], a: 1 },
+            { cat: "Movies", q: "'Brahmāstra: Part One – Shiva' stars whom?", opts: ["Ranveer Singh", "Varun Dhawan", "Ranbir Kapoor", "Sidharth Malhotra"], a: 2 },
+            { cat: "Movies", q: "Who played the title role in 'Padmaavat'?", opts: ["Priyanka Chopra", "Deepika Padukone", "Alia Bhatt", "Katrina Kaif"], a: 1 },
+            { cat: "Movies", q: "'Jawan' (2023) features which actor in a dual role?", opts: ["Akshay Kumar", "Ajay Devgn", "Shah Rukh Khan", "Saif Ali Khan"], a: 2 },
+            { cat: "Movies", q: "'Kalki 2898 AD' features which legendary actor as Ashwatthama?", opts: ["Kamal Haasan", "Rajinikanth", "Amitabh Bachchan", "Chiranjeevi"], a: 2 },
+            { cat: "Movies", q: "'Animal' (2023) was directed by whom?", opts: ["Sandeep Reddy Vanga", "Rajkumar Hirani", "Zoya Akhtar", "Kabir Khan"], a: 0 }
+        ];
+
+        // --- GAME VARIABLES ---
+        let currentQIndex = 0;
+        let score = 0;
+        let timerInterval;
+        let timeLeft = 30;
+        let canAnswer = false;
+
+        // --- ELEMENTS ---
+        const introScreen = document.getElementById('intro-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const endScreen = document.getElementById('end-screen');
+        const qText = document.getElementById('question-text');
+        const answersContainer = document.getElementById('answers-container');
+        const qNumDisplay = document.getElementById('q-num');
+        const totalQDisplay = document.getElementById('total-q');
+        const finalTotalDisplay = document.getElementById('final-total');
+        const catDisplay = document.getElementById('category-display');
+        const timerBar = document.getElementById('timer-bar');
+        const timerVal = document.getElementById('timer-val');
+        const nextBtn = document.getElementById('next-btn');
+        const scoreDisplay = document.getElementById('final-score');
+
+        // --- FUNCTIONS ---
+        
+        function resizeGame() {
+            const baseWidth = 1280;
+            const baseHeight = 720;
+            const scale = Math.min(window.innerWidth / baseWidth, window.innerHeight / baseHeight);
+            const container = document.querySelector('.slide-container');
+            container.style.transform = `scale(${scale})`;
+        }
+        window.addEventListener('resize', resizeGame);
+        window.addEventListener('load', resizeGame);
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            // Update total counters dynamically
+            totalQDisplay.innerText = questions.length;
+            finalTotalDisplay.innerText = questions.length;
+            
+            introScreen.classList.remove('active');
+            gameScreen.classList.add('active');
+            
+            // Audio: Start Background Music
+            playAudio('bg');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // Reset State
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            timerVal.innerText = 30;
+            timerBar.style.strokeDashoffset = 0;
+            timerBar.style.stroke = '#ff9100';
+            canAnswer = true;
+            nextBtn.style.display = 'none';
+            answersContainer.innerHTML = '';
+            
+            const qData = questions[currentQIndex];
+            
+            // Update UI
+            qText.innerText = qData.q;
+            qNumDisplay.innerText = currentQIndex + 1;
+            catDisplay.innerText = qData.cat;
+
+            // Create Buttons
+            qData.opts.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-label">${String.fromCharCode(65 + index)}:</span> <span class="option-text">${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                answersContainer.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            // Audio: Start Ticking
+            playAudio('timer');
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerVal.innerText = timeLeft;
+                
+                // Progress Bar Math (226 is circumference)
+                const offset = 226 - (226 * timeLeft / 30);
+                timerBar.style.strokeDashoffset = offset;
+
+                if(timeLeft <= 10) timerBar.style.stroke = '#d50000';
+
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    canAnswer = false;
+                    stopAudio('timer');
+                    playAudio('wrong'); // Time out sound
+                    revealAnswer(false); 
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(selectedIndex, btn) {
+            if(!canAnswer) return;
+            canAnswer = false;
+            clearInterval(timerInterval);
+            
+            // Audio: Stop Ticking, Play Select
+            stopAudio('timer');
+            playAudio('select');
+
+            // Visual Select
+            btn.classList.add('selected');
+            
+            const correctIndex = questions[currentQIndex].a;
+
+            setTimeout(() => {
+                btn.classList.remove('selected');
+                if(selectedIndex === correctIndex) {
+                    btn.classList.add('correct');
+                    playAudio('correct');
+                    score++;
+                } else {
+                    btn.classList.add('wrong');
+                    playAudio('wrong');
+                    // Show correct
+                    answersContainer.children[correctIndex].classList.add('correct');
+                }
+                nextBtn.style.display = 'block';
+            }, 1000); // 1s Lock-in time
+        }
+
+        function revealAnswer() {
+            // Used for timeout or skip
+            const correctIndex = questions[currentQIndex].a;
+            answersContainer.children[correctIndex].classList.add('correct');
+            nextBtn.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            if(currentQIndex < questions.length - 1) {
+                currentQIndex++;
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            stopAudio('bg');
+            stopAudio('timer');
+            playAudio('correct'); // Fanfare for finishing
+            
+            gameScreen.classList.remove('active');
+            endScreen.classList.add('active');
+            scoreDisplay.innerText = score;
+        }
+
+        // --- LIFELINES ---
+        function useLifeline(type, iconBtn) {
+            if(!canAnswer || iconBtn.classList.contains('used')) return;
+            
+            iconBtn.classList.add('used');
+            playAudio('select');
+
+            if(type === '5050') {
+                // Remove 2 wrong answers
+                const correctIndex = questions[currentQIndex].a;
+                let removed = 0;
+                const opts = Array.from(answersContainer.children);
+                
+                opts.forEach((btn, idx) => {
+                    if(idx !== correctIndex && removed < 2) {
+                        btn.style.opacity = '0';
+                        btn.style.pointerEvents = 'none';
+                        removed++;
+                    }
+                });
+            } else if(type === 'time') {
+                // Add time
+                timeLeft = Math.min(timeLeft + 30, 60); 
+                timerVal.innerText = timeLeft;
+            } else if(type === 'skip') {
+                clearInterval(timerInterval);
+                stopAudio('timer');
+                playAudio('correct');
+                canAnswer = false;
+                score++; // Free point
+                revealAnswer(); 
+            }
+        }
+
+    </script>
+</body>
+</html>
