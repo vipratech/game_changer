@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The 100 Question Challenge</title>
+    <title>Game Changer</title>
     <link href="https://fonts.googleapis.com/css2?family=Copperplate&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -289,7 +289,7 @@
         <div id="intro-screen" class="screen active">
             <div class="intro-content">
                 <div class="logo-title">QUIZ<br>MASTER</div>
-                <p style="color: #b3e5fc; font-size: 24px;">100 Question Challenge</p>
+                <p style="color: #b3e5fc; font-size: 24px;">Who's the Smartest?</p>
                 <button class="start-btn" onclick="startGame()">PLAY NOW</button>
             </div>
         </div>
@@ -390,114 +390,113 @@
 
         // --- DATABASE OF 100 QUESTIONS ---
         const questions = [
-            // --- ORIGINAL 50 ---
-            { cat: "History", q: "In which year did World War II end?", opts: ["1942", "1945", "1948", "1950"], a: 1 },
-            { cat: "Science", q: "What is the chemical symbol for Gold?", opts: ["Ag", "Au", "Fe", "Pb"], a: 1 },
-            { cat: "Geography", q: "Which is the largest ocean on Earth?", opts: ["Atlantic", "Indian", "Pacific", "Arctic"], a: 2 },
-            { cat: "Literature", q: "Who wrote 'Romeo and Juliet'?", opts: ["Dickens", "Shakespeare", "Hemingway", "Twain"], a: 1 },
-            { cat: "Movies", q: "Which movie featured the quote 'I'll be back'?", opts: ["Rocky", "Star Wars", "The Terminator", "Die Hard"], a: 2 },
-            { cat: "Music", q: "Who is known as the 'King of Pop'?", opts: ["Prince", "Elvis", "MJ", "Freddie Mercury"], a: 2 },
-            { cat: "Technology", q: "What does 'HTTP' stand for?", opts: ["HyperText Transfer Protocol", "High Tech Transfer Point", "HyperText Transmission Path", "Home Tool Transfer Page"], a: 0 },
-            { cat: "Sports", q: "How many rings are in the Olympic logo?", opts: ["4", "5", "6", "7"], a: 1 },
-            { cat: "Food", q: "Sushi traditionally comes from which country?", opts: ["China", "Korea", "Thailand", "Japan"], a: 3 },
-            { cat: "Animals", q: "Which land animal is the fastest?", opts: ["Lion", "Cheetah", "Gazelle", "Leopard"], a: 1 },
-            { cat: "Space", q: "Which planet is known as the Red Planet?", opts: ["Venus", "Mars", "Jupiter", "Saturn"], a: 1 },
-            { cat: "Geography", q: "The Eiffel Tower is located in which city?", opts: ["Berlin", "London", "Paris", "Rome"], a: 2 },
-            { cat: "History", q: "Who was the first President of the USA?", opts: ["Jefferson", "Lincoln", "Washington", "Adams"], a: 2 },
-            { cat: "Science", q: "At what temperature (Celsius) does water boil?", opts: ["90", "100", "110", "120"], a: 1 },
-            { cat: "Body", q: "What is the largest organ in the human body?", opts: ["Liver", "Heart", "Skin", "Lungs"], a: 2 },
-            { cat: "Movies", q: "Which animation studio created 'Toy Story'?", opts: ["Dreamworks", "Pixar", "Disney", "Sony"], a: 1 },
-            { cat: "Literature", q: "Who wrote the Harry Potter series?", opts: ["J.R.R. Tolkien", "C.S. Lewis", "J.K. Rowling", "Roald Dahl"], a: 2 },
-            { cat: "Music", q: "How many members were in The Beatles?", opts: ["3", "4", "5", "6"], a: 1 },
-            { cat: "General", q: "How many days are in a leap year?", opts: ["364", "365", "366", "367"], a: 2 },
-            { cat: "Science", q: "What gas do plants absorb from the atmosphere?", opts: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], a: 2 },
-            { cat: "Technology", q: "Who co-founded Microsoft?", opts: ["Steve Jobs", "Bill Gates", "Elon Musk", "Mark Zuckerberg"], a: 1 },
-            { cat: "Geography", q: "What is the capital of Italy?", opts: ["Venice", "Milan", "Naples", "Rome"], a: 3 },
-            { cat: "History", q: "The Titanic sank in which year?", opts: ["1910", "1912", "1914", "1916"], a: 1 },
-            { cat: "Animals", q: "What is a group of lions called?", opts: ["Pack", "Herd", "Pride", "School"], a: 2 },
-            { cat: "Sports", q: "In which sport would you perform a 'slam dunk'?", opts: ["Tennis", "Golf", "Basketball", "Soccer"], a: 2 },
-            { cat: "Food", q: "What is the main ingredient in Guacamole?", opts: ["Tomato", "Onion", "Avocado", "Pepper"], a: 2 },
-            { cat: "Science", q: "What is the center of an atom called?", opts: ["Proton", "Electron", "Nucleus", "Molecule"], a: 2 },
-            { cat: "Literature", q: "Who wrote '1984'?", opts: ["George Orwell", "Aldous Huxley", "Ray Bradbury", "Stephen King"], a: 0 },
-            { cat: "Geography", q: "Which continent is the Sahara Desert located in?", opts: ["Asia", "South America", "Africa", "Australia"], a: 2 },
-            { cat: "Movies", q: "Who played Jack Sparrow in Pirates of the Caribbean?", opts: ["Orlando Bloom", "Brad Pitt", "Johnny Depp", "Tom Cruise"], a: 2 },
-            { cat: "Technology", q: "What does 'www' stand for?", opts: ["World Wide Web", "World Web Wide", "Wide World Web", "Web World Wide"], a: 0 },
-            { cat: "Body", q: "How many teeth does an adult human typically have?", opts: ["28", "30", "32", "34"], a: 2 },
-            { cat: "History", q: "Who discovered America in 1492?", opts: ["Magellan", "Columbus", "Cook", "Vespucci"], a: 1 },
-            { cat: "Animals", q: "Which bird is the symbol of peace?", opts: ["Eagle", "Dove", "Swan", "Hawk"], a: 1 },
-            { cat: "Music", q: "Which instrument has 88 keys?", opts: ["Guitar", "Violin", "Piano", "Flute"], a: 2 },
-            { cat: "Geography", q: "Which country has the largest population?", opts: ["USA", "India", "China", "Russia"], a: 1 },
-            { cat: "Science", q: "What is the hardest natural substance?", opts: ["Gold", "Iron", "Diamond", "Platinum"], a: 2 },
-            { cat: "Sports", q: "Which country won the first FIFA World Cup?", opts: ["Brazil", "Argentina", "Uruguay", "Italy"], a: 2 },
-            { cat: "Food", q: "Which nut is used to make Marzipan?", opts: ["Walnut", "Peanut", "Almond", "Cashew"], a: 2 },
-            { cat: "Movies", q: "What color is the pill Neo takes in The Matrix?", opts: ["Blue", "Red", "Green", "Yellow"], a: 1 },
-            { cat: "History", q: "The Great Wall of China was built to keep out who?", opts: ["Mongols", "Romans", "Japanese", "Vikings"], a: 0 },
-            { cat: "Body", q: "What pumps blood through the body?", opts: ["Lungs", "Brain", "Heart", "Liver"], a: 2 },
-            { cat: "Technology", q: "Which company produces the iPhone?", opts: ["Samsung", "Google", "Microsoft", "Apple"], a: 3 },
-            { cat: "Animals", q: "Which mammal is known to lay eggs?", opts: ["Kangaroo", "Platypus", "Bat", "Whale"], a: 1 },
-            { cat: "Literature", q: "Who created Sherlock Holmes?", opts: ["Agatha Christie", "Arthur Conan Doyle", "Edgar Allan Poe", "Ian Fleming"], a: 1 },
-            { cat: "General", q: "Which currency is used in the UK?", opts: ["Dollar", "Euro", "Yen", "Pound"], a: 3 },
-            { cat: "Science", q: "What is the speed of light approx?", opts: ["300,000 km/s", "150,000 km/s", "1,000 km/s", "Light speed"], a: 0 },
-            { cat: "Geography", q: "Mount Everest is in which mountain range?", opts: ["Andes", "Rockies", "Alps", "Himalayas"], a: 3 },
-            { cat: "Movies", q: "Which movie features a character named 'Donkey'?", opts: ["Ice Age", "Shrek", "Madagascar", "Finding Nemo"], a: 1 },
+            // --- USA HISTORY ---
+            { cat: "USA History", q: "In which year was the Declaration of Independence signed?", opts: ["1776", "1789", "1812", "1492"], a: 0 },
+            { cat: "USA History", q: "Who was the first President of the United States?", opts: ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"], a: 2 },
+            { cat: "USA History", q: "Which war was fought between the North and South from 1861-1865?", opts: ["Revolutionary War", "Civil War", "World War I", "Vietnam War"], a: 1 },
+            { cat: "USA History", q: "The Louisiana Purchase involved buying land from which country?", opts: ["Spain", "Great Britain", "France", "Russia"], a: 2 },
+            { cat: "USA History", q: "Which amendment granted women the right to vote?", opts: ["13th", "15th", "19th", "21st"], a: 2 },
+            { cat: "USA History", q: "In what year did the Apollo 11 mission land on the moon?", opts: ["1959", "1969", "1972", "1981"], a: 1 },
+            { cat: "USA History", q: "Who is known as the 'Father of the Constitution'?", opts: ["James Madison", "Alexander Hamilton", "Benjamin Franklin", "Thomas Jefferson"], a: 0 },
+            { cat: "USA History", q: "The United States fought against whom in the War of 1812?", opts: ["France", "Spain", "Great Britain", "Mexico"], a: 2 },
+            { cat: "USA History", q: "Which President signed the Emancipation Proclamation?", opts: ["Andrew Jackson", "Ulysses S. Grant", "Abraham Lincoln", "Teddy Roosevelt"], a: 2 },
+            { cat: "USA History", q: "Who was the primary rival of the US during the Cold War?", opts: ["China", "Germany", "Soviet Union", "Japan"], a: 2 },
 
-            // --- US HISTORY ---
-            { cat: "US History", q: "Who wrote the Declaration of Independence?", opts: ["Washington", "Jefferson", "Adams", "Franklin"], a: 1 },
-            { cat: "US History", q: "Which war was fought between the North and South?", opts: ["WWI", "Revolutionary War", "Civil War", "Vietnam War"], a: 2 },
-            { cat: "US History", q: "The Louisiana Purchase was bought from which country?", opts: ["Spain", "England", "France", "Russia"], a: 2 },
-            { cat: "US History", q: "Who was the first woman to fly solo across the Atlantic?", opts: ["Amelia Earhart", "Sally Ride", "Bessie Coleman", "Harriet Tubman"], a: 0 },
-            { cat: "US History", q: "Which amendment gave women the right to vote?", opts: ["1st", "13th", "19th", "21st"], a: 2 },
-            { cat: "US History", q: "The Boston Tea Party was a protest against what?", opts: ["War", "Taxes", "Slavery", "King George"], a: 1 },
-            { cat: "US History", q: "Who delivered the 'I Have a Dream' speech?", opts: ["Malcolm X", "JFK", "MLK Jr.", "Rosa Parks"], a: 2 },
-            { cat: "US History", q: "Which President signed the Emancipation Proclamation?", opts: ["Lincoln", "Grant", "Jefferson", "Jackson"], a: 0 },
-            { cat: "US History", q: "In what year did the US land on the moon?", opts: ["1959", "1965", "1969", "1972"], a: 2 },
-            { cat: "US History", q: "Which President served more than two terms?", opts: ["Washington", "Lincoln", "FDR", "Obama"], a: 2 },
-            { cat: "US History", q: "The Star-Spangled Banner was written during which war?", opts: ["Civil War", "Revolutionary War", "War of 1812", "WWI"], a: 2 },
-            { cat: "US History", q: "Who was the primary author of the US Constitution?", opts: ["Madison", "Hamilton", "Jay", "Hancock"], a: 0 },
+            // --- USA MONUMENTS ---
+            { cat: "USA Monuments", q: "In which harbor does the Statue of Liberty stand?", opts: ["Boston Harbor", "New York Harbor", "Pearl Harbor", "Baltimore Harbor"], a: 1 },
+            { cat: "USA Monuments", q: "Mount Rushmore is located in which US state?", opts: ["North Dakota", "South Dakota", "Montana", "Wyoming"], a: 1 },
+            { cat: "USA Monuments", q: "The Golden Gate Bridge is an iconic symbol of which city?", opts: ["Los Angeles", "San Diego", "Seattle", "San Francisco"], a: 3 },
+            { cat: "USA Monuments", q: "The Gateway Arch is located in which city?", opts: ["Kansas City", "St. Louis", "Chicago", "Denver"], a: 1 },
+            { cat: "USA Monuments", q: "The Lincoln Memorial features a large statue of Lincoln doing what?", opts: ["Standing", "Riding a Horse", "Seated", "Writing"], a: 2 },
+            { cat: "USA Monuments", q: "Where can you find the Liberty Bell?", opts: ["Washington D.C.", "Boston", "Philadelphia", "New York City"], a: 2 },
+            { cat: "USA Monuments", q: "The Space Needle is a landmark in which city?", opts: ["Portland", "Seattle", "Vancouver", "Las Vegas"], a: 1 },
+            { cat: "USA Monuments", q: "The Alamo is a historic mission located in which city?", opts: ["Austin", "Houston", "Dallas", "San Antonio"], a: 3 },
+            { cat: "USA Monuments", q: "What is the shape of the Washington Monument?", opts: ["Pyramid", "Sphere", "Obelisk", "Cube"], a: 2 },
+            { cat: "USA Monuments", q: "The Hoover Dam was built on which river?", opts: ["Mississippi", "Colorado", "Missouri", "Rio Grande"], a: 1 },
 
-            // --- US MONUMENTS & LANDMARKS ---
-            { cat: "Landmarks", q: "The Space Needle is located in which city?", opts: ["Portland", "Seattle", "Austin", "Denver"], a: 1 },
-            { cat: "Landmarks", q: "Where is the Liberty Bell located?", opts: ["Boston", "New York", "Philadelphia", "Washington DC"], a: 2 },
-            { cat: "Landmarks", q: "The Gateway Arch is in which state?", opts: ["California", "Missouri", "Utah", "Nevada"], a: 1 },
-            { cat: "Landmarks", q: "Which dam forms Lake Mead?", opts: ["Glen Canyon", "Grand Coulee", "Hoover Dam", "Folsom"], a: 2 },
-            { cat: "Landmarks", q: "The Alamo is a historic mission in which city?", opts: ["Dallas", "Houston", "El Paso", "San Antonio"], a: 3 },
-            { cat: "Landmarks", q: "Where is the Lincoln Memorial located?", opts: ["New York", "Philadelphia", "Washington D.C.", "Richmond"], a: 2 },
-            { cat: "Landmarks", q: "Grand Canyon National Park is in which state?", opts: ["Nevada", "Colorado", "Arizona", "New Mexico"], a: 2 },
-            { cat: "Landmarks", q: "Mount Rushmore features the faces of how many presidents?", opts: ["3", "4", "5", "6"], a: 1 },
-            { cat: "Landmarks", q: "Which bridge connects San Francisco to Marin County?", opts: ["Brooklyn", "Golden Gate", "London", "Bay Bridge"], a: 1 },
-            { cat: "Landmarks", q: "The White House is located at what address?", opts: ["10 Downing St", "1600 Pennsylvania Ave", "221B Baker St", "Wall St"], a: 1 },
-            { cat: "Landmarks", q: "Where is Pearl Harbor National Memorial?", opts: ["California", "Florida", "Hawaii", "Guam"], a: 2 },
-            { cat: "Landmarks", q: "Cloud Gate (The Bean) is in which city?", opts: ["St. Louis", "Chicago", "Toronto", "Seattle"], a: 1 },
+            // --- USA FAMOUS PERSONALITIES ---
+            { cat: "USA People", q: "Who delivered the famous 'I Have a Dream' speech?", opts: ["Malcolm X", "Martin Luther King Jr.", "John F. Kennedy", "Barack Obama"], a: 1 },
+            { cat: "USA People", q: "Which inventor is credited with the practical electric light bulb?", opts: ["Nikola Tesla", "Alexander Graham Bell", "Thomas Edison", "Benjamin Franklin"], a: 2 },
+            { cat: "USA People", q: "Who became the first female Vice President of the USA?", opts: ["Hillary Clinton", "Sarah Palin", "Kamala Harris", "Condoleezza Rice"], a: 2 },
+            { cat: "USA People", q: "Who co-founded Microsoft?", opts: ["Steve Jobs", "Bill Gates", "Mark Zuckerberg", "Jeff Bezos"], a: 1 },
+            { cat: "USA People", q: "Rosa Parks is famous for refusing to give up her seat on a...?", opts: ["Train", "Bus", "Plane", "Boat"], a: 1 },
+            { cat: "USA People", q: "Who was the first person to walk on the moon?", opts: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "John Glenn"], a: 2 },
+            { cat: "USA People", q: "Who was known as the 'King of Rock and Roll'?", opts: ["Michael Jackson", "Prince", "Elvis Presley", "Johnny Cash"], a: 2 },
+            { cat: "USA People", q: "Which animator created Mickey Mouse?", opts: ["Walt Disney", "Chuck Jones", "Tex Avery", "William Hanna"], a: 0 },
+            { cat: "USA People", q: "Benjamin Franklin is famous for his experiment with lightning and a...?", opts: ["Balloon", "Rod", "Kite", "Jar"], a: 2 },
+            { cat: "USA People", q: "Amelia Earhart was famous for being the first woman to fly solo across...?", opts: ["The Pacific", "The Atlantic", "The US", "The World"], a: 1 },
 
-            // --- HINDU CULTURE ---
-            { cat: "Hinduism", q: "Which festival celebrates the bond between brothers and sisters?", opts: ["Diwali", "Holi", "Raksha Bandhan", "Navratri"], a: 2 },
-            { cat: "Hinduism", q: "Who is the god of destruction in the Trimurti?", opts: ["Brahma", "Vishnu", "Shiva", "Indra"], a: 2 },
-            { cat: "Hinduism", q: "The Ramayana tells the story of which Prince?", opts: ["Krishna", "Arjuna", "Rama", "Ganesha"], a: 2 },
-            { cat: "Hinduism", q: "Which river is considered most sacred in Hinduism?", opts: ["Yamuna", "Ganges", "Saraswati", "Narmada"], a: 1 },
-            { cat: "Hinduism", q: "What does 'Namaste' literally mean?", opts: ["Hello", "Peace", "I bow to you", "Welcome"], a: 2 },
-            { cat: "Hinduism", q: "Who is the monkey god and devotee of Rama?", opts: ["Ganesha", "Hanuman", "Kartikeya", "Garuda"], a: 1 },
-            { cat: "Hinduism", q: "The Vedas are written in which ancient language?", opts: ["Hindi", "Tamil", "Pali", "Sanskrit"], a: 3 },
-            { cat: "Hinduism", q: "Which goddess represents knowledge and music?", opts: ["Lakshmi", "Durga", "Saraswati", "Kali"], a: 2 },
-            { cat: "Hinduism", q: "Kumbh Mela is a major pilgrimage gathering at which location type?", opts: ["Mountains", "River banks", "Forests", "Deserts"], a: 1 },
-            { cat: "Hinduism", q: "Which deity is known as the 'Preserver'?", opts: ["Shiva", "Vishnu", "Brahma", "Ganesh"], a: 1 },
-            { cat: "Hinduism", q: "Diwali commemorates the return of Lord Rama to which city?", opts: ["Lanka", "Ayodhya", "Mathura", "Kashi"], a: 1 },
-            { cat: "Hinduism", q: "What is the holy symbol representing the universe?", opts: ["Swastika", "Om", "Lotus", "Trishul"], a: 1 },
-            { cat: "Hinduism", q: "Which epic contains the Bhagavad Gita?", opts: ["Ramayana", "Mahabharata", "Vedas", "Upanishads"], a: 1 },
+            // --- USA TEXAS ---
+            { cat: "Texas", q: "What is the capital city of Texas?", opts: ["Houston", "Dallas", "San Antonio", "Austin"], a: 3 },
+            { cat: "Texas", q: "What is the official nickname of Texas?", opts: ["The Sunshine State", "The Lone Star State", "The Golden State", "The Empire State"], a: 1 },
+            { cat: "Texas", q: "Which famous battle cry originated from the Texas Revolution?", opts: ["Victory or Death", "Remember the Alamo", "Don't Tread on Me", "Come and Take It"], a: 1 },
+            { cat: "Texas", q: "Which industry is most historically associated with the Texas economy?", opts: ["Technology", "Automotive", "Oil/Energy", "Mining"], a: 2 },
+            { cat: "Texas", q: "Which city is home to NASA's Johnson Space Center?", opts: ["Austin", "Dallas", "Houston", "Fort Worth"], a: 2 },
+            { cat: "Texas", q: "What is the state flower of Texas?", opts: ["Bluebonnet", "Rose", "Sunflower", "Cactus"], a: 0 },
+            { cat: "Texas", q: "Before becoming a US state, Texas was an independent...?", opts: ["Kingdom", "Empire", "Republic", "Colony"], a: 2 },
+            { cat: "Texas", q: "Which river forms the border between Texas and Mexico?", opts: ["Red River", "Colorado River", "Rio Grande", "Brazos River"], a: 2 },
+            { cat: "Texas", q: "Texas hosts the largest State Fair in the US in which city?", opts: ["Houston", "San Antonio", "Dallas", "El Paso"], a: 2 },
+            { cat: "Texas", q: "Which Texas city has the largest population?", opts: ["San Antonio", "Dallas", "Austin", "Houston"], a: 3 },
 
-            // --- BOLLYWOOD & TOLLYWOOD (2015-2025) ---
-            { cat: "Movies", q: "Which movie features the song 'Naatu Naatu'?", opts: ["Pushpa", "KGF", "RRR", "Baahubali"], a: 2 },
-            { cat: "Movies", q: "Who played the lead role in 'Pathaan'?", opts: ["Salman Khan", "Shah Rukh Khan", "Aamir Khan", "Hrithik Roshan"], a: 1 },
-            { cat: "Movies", q: "'Baahubali: The Conclusion' was released in which year?", opts: ["2015", "2016", "2017", "2018"], a: 2 },
-            { cat: "Movies", q: "Which movie is a biography of wrestler Mahavir Singh Phogat?", opts: ["Sultan", "Dangal", "Chak De", "Lagaan"], a: 1 },
-            { cat: "Movies", q: "Who directed the movie 'RRR'?", opts: ["Karan Johar", "S.S. Rajamouli", "Sanjay Leela Bhansali", "Rohit Shetty"], a: 1 },
-            { cat: "Movies", q: "'K.G.F: Chapter 2' stars which actor as Rocky?", opts: ["Prabhas", "Yash", "Ram Charan", "NTR Jr"], a: 1 },
-            { cat: "Movies", q: "Which 2023 movie features the character 'Tara Singh'?", opts: ["Pathaan", "Jawan", "Gadar 2", "Animal"], a: 2 },
-            { cat: "Movies", q: "'Pushpa: The Rise' popularized which actor's mannerism?", opts: ["Mahesh Babu", "Allu Arjun", "Vijay", "Dhanush"], a: 1 },
-            { cat: "Movies", q: "'Brahmāstra: Part One – Shiva' stars whom?", opts: ["Ranveer Singh", "Varun Dhawan", "Ranbir Kapoor", "Sidharth Malhotra"], a: 2 },
-            { cat: "Movies", q: "Who played the title role in 'Padmaavat'?", opts: ["Priyanka Chopra", "Deepika Padukone", "Alia Bhatt", "Katrina Kaif"], a: 1 },
-            { cat: "Movies", q: "'Jawan' (2023) features which actor in a dual role?", opts: ["Akshay Kumar", "Ajay Devgn", "Shah Rukh Khan", "Saif Ali Khan"], a: 2 },
-            { cat: "Movies", q: "'Kalki 2898 AD' features which legendary actor as Ashwatthama?", opts: ["Kamal Haasan", "Rajinikanth", "Amitabh Bachchan", "Chiranjeevi"], a: 2 },
-            { cat: "Movies", q: "'Animal' (2023) was directed by whom?", opts: ["Sandeep Reddy Vanga", "Rajkumar Hirani", "Zoya Akhtar", "Kabir Khan"], a: 0 }
+            // --- HINDU DHARMA FACTS ---
+            { cat: "Hindu Dharma", q: "What are the oldest sacred scriptures of Hinduism called?", opts: ["Puranas", "Vedas", "Sutras", "Epics"], a: 1 },
+            { cat: "Hindu Dharma", q: "What concept refers to one's righteous duty or moral order?", opts: ["Karma", "Moksha", "Dharma", "Artha"], a: 2 },
+            { cat: "Hindu Dharma", q: "What is the cycle of birth, death, and rebirth called?", opts: ["Samsara", "Nirvana", "Maya", "Yoga"], a: 0 },
+            { cat: "Hindu Dharma", q: "The law of cause and effect is known as...?", opts: ["Dharma", "Karma", "Bhakti", "Jnana"], a: 1 },
+            { cat: "Hindu Dharma", q: "Which sacred sound or syllable represents the universe?", opts: ["Ah", "Om", "Hum", "Ra"], a: 1 },
+            { cat: "Hindu Dharma", q: "What is the ultimate, formless reality in Hinduism?", opts: ["Atman", "Brahman", "Deva", "Asura"], a: 1 },
+            { cat: "Hindu Dharma", q: "Brahma, Vishnu, and Shiva are collectively known as the...?", opts: ["Trimurti", "Tridevi", "Triloka", "Triveda"], a: 0 },
+            { cat: "Hindu Dharma", q: "Which river is considered the most holy in Hinduism?", opts: ["Yamuna", "Ganga", "Saraswati", "Narmada"], a: 1 },
+            { cat: "Hindu Dharma", q: "Which practice involves physical postures, breath control, and meditation?", opts: ["Puja", "Yajna", "Yoga", "Tapas"], a: 2 },
+            { cat: "Hindu Dharma", q: "A spiritual teacher or guide is called a...?", opts: ["Swami", "Pandit", "Guru", "Yogi"], a: 2 },
+
+            // --- HINDU FESTIVALS ---
+            { cat: "Hindu Festivals", q: "Which festival is known as the 'Festival of Lights'?", opts: ["Holi", "Diwali", "Navratri", "Pongal"], a: 1 },
+            { cat: "Hindu Festivals", q: "Holi is celebrated by throwing what?", opts: ["Water", "Flowers", "Colored Powder", "Rice"], a: 2 },
+            { cat: "Hindu Festivals", q: "Raksha Bandhan celebrates the bond between...?", opts: ["Husband & Wife", "Mother & Child", "Teacher & Student", "Brother & Sister"], a: 3 },
+            { cat: "Hindu Festivals", q: "Navratri is a festival dedicated to the Goddess spanning how many nights?", opts: ["Seven", "Nine", "Ten", "Twelve"], a: 1 },
+            { cat: "Hindu Festivals", q: "Janmashtami celebrates the birth of which deity?", opts: ["Rama", "Shiva", "Krishna", "Ganesha"], a: 2 },
+            { cat: "Hindu Festivals", q: "Rama Navami marks the birth of Lord...?", opts: ["Rama", "Krishna", "Vishnu", "Shiva"], a: 0 },
+            { cat: "Hindu Festivals", q: "Mahashivaratri is a night dedicated to Lord...?", opts: ["Vishnu", "Brahma", "Shiva", "Indra"], a: 2 },
+            { cat: "Hindu Festivals", q: "Ganesh Chaturthi celebrates the birth of the god with the head of an...?", opts: ["Eagle", "Lion", "Monkey", "Elephant"], a: 3 },
+            { cat: "Hindu Festivals", q: "Pongal is a harvest festival primarily celebrated in which state?", opts: ["Punjab", "Tamil Nadu", "Kerala", "Gujarat"], a: 1 },
+            { cat: "Hindu Festivals", q: "Makar Sankranti marks the transition of the...?", opts: ["Moon", "Sun", "Stars", "Seasons"], a: 1 },
+
+            // --- RAMAYANA ---
+            { cat: "Ramayana", q: "Who wrote the epic Ramayana?", opts: ["Vyasa", "Valmiki", "Tulsidas", "Kalidasa"], a: 1 },
+            { cat: "Ramayana", q: "Who is the main protagonist of the Ramayana?", opts: ["Krishna", "Arjuna", "Rama", "Bhima"], a: 2 },
+            { cat: "Ramayana", q: "Who is the wife of Lord Rama?", opts: ["Radha", "Sita", "Parvati", "Lakshmi"], a: 1 },
+            { cat: "Ramayana", q: "Who was the demon king who abducted Sita?", opts: ["Kamsa", "Ravana", "Hiranyakashipu", "Duryodhana"], a: 1 },
+            { cat: "Ramayana", q: "Who is the devoted monkey deity who helped Rama?", opts: ["Ganesha", "Hanuman", "Garuda", "Nandi"], a: 1 },
+            { cat: "Ramayana", q: "Who is Rama's loyal brother who accompanied him to the forest?", opts: ["Bharata", "Shatrughna", "Lakshmana", "Balarama"], a: 2 },
+            { cat: "Ramayana", q: "What was the name of Rama's kingdom?", opts: ["Hastinapura", "Mathura", "Dwaraka", "Ayodhya"], a: 3 },
+            { cat: "Ramayana", q: "Which giant bird fought Ravana to save Sita?", opts: ["Garuda", "Jatayu", "Sampati", "Kakabhushundi"], a: 1 },
+            { cat: "Ramayana", q: "What was built to cross the ocean to Lanka?", opts: ["Ship", "Tunnel", "Bridge (Ram Setu)", "Flying Chariot"], a: 2 },
+            { cat: "Ramayana", q: "Where was Ravana's kingdom located?", opts: ["Ayodhya", "Kishkindha", "Lanka", "Dandakaranya"], a: 2 },
+
+            // --- MAHA BHARATA ---
+            { cat: "Mahabharata", q: "Who is traditionally credited with writing the Mahabharata?", opts: ["Valmiki", "Vyasa", "Manu", "Chanakya"], a: 1 },
+            { cat: "Mahabharata", q: "The central conflict is between the Pandavas and the...?", opts: ["Yadavas", "Rakshasas", "Kauravas", "Gandharvas"], a: 2 },
+            { cat: "Mahabharata", q: "How many Pandava brothers were there?", opts: ["Three", "Five", "Seven", "One Hundred"], a: 1 },
+            { cat: "Mahabharata", q: "How many Kaurava brothers were there?", opts: ["Five", "Ten", "Fifty", "One Hundred"], a: 3 },
+            { cat: "Mahabharata", q: "Who was the greatest archer among the Pandavas?", opts: ["Yudhisthira", "Bhima", "Arjuna", "Nakula"], a: 2 },
+            { cat: "Mahabharata", q: "Which sacred text is a conversation between Krishna and Arjuna?", opts: ["Ramayana", "Vedas", "Upanishads", "Bhagavad Gita"], a: 3 },
+            { cat: "Mahabharata", q: "Who was the common wife of the five Pandavas?", opts: ["Kunti", "Madri", "Draupadi", "Subhadra"], a: 2 },
+            { cat: "Mahabharata", q: "Who was the eldest Pandava brother?", opts: ["Arjuna", "Bhima", "Yudhisthira", "Sahadeva"], a: 2 },
+            { cat: "Mahabharata", q: "Who was the blind king and father of the Kauravas?", opts: ["Pandu", "Dhritarashtra", "Bhishma", "Vidura"], a: 1 },
+            { cat: "Mahabharata", q: "Who served as Arjuna's charioteer in the war?", opts: ["Balarama", "Krishna", "Karna", "Drona"], a: 1 },
+
+            // --- SRIMAD BHAGAVATAM ---
+            { cat: "Srimad Bhagavatam", q: "The Srimad Bhagavatam primarily focuses on the devotion to whom?", opts: ["Shiva", "Brahma", "Krishna/Vishnu", "Indra"], a: 2 },
+            { cat: "Srimad Bhagavatam", q: "Who spoke the Bhagavatam to King Parikshit?", opts: ["Vyasa", "Narada", "Sukadeva Goswami", "Suta Goswami"], a: 2 },
+            { cat: "Srimad Bhagavatam", q: "Who was the emperor cursed to die in seven days?", opts: ["Yudhisthira", "Arjuna", "Parikshit", "Janamejaya"], a: 2 },
+            { cat: "Srimad Bhagavatam", q: "How many Cantos (books) are in the Srimad Bhagavatam?", opts: ["10", "12", "18", "24"], a: 1 },
+            { cat: "Srimad Bhagavatam", q: "Which incarnation of Vishnu appeared as a giant Boar?", opts: ["Matsya", "Kurma", "Varaha", "Vamana"], a: 2 },
+            { cat: "Srimad Bhagavatam", q: "Which incarnation appeared as a half-man, half-lion?", opts: ["Varaha", "Narasimha", "Parasurama", "Rama"], a: 1 },
+            { cat: "Srimad Bhagavatam", q: "Who was the biological mother of Lord Krishna?", opts: ["Yashoda", "Rohini", "Devaki", "Kunti"], a: 2 },
+            { cat: "Srimad Bhagavatam", q: "Which demoness tried to kill baby Krishna with poisoned milk?", opts: ["Putana", "Trinavarta", "Aghasura", "Bakasura"], a: 0 },
+            { cat: "Srimad Bhagavatam", q: "The Rasa Lila is a divine dance between Krishna and the...?", opts: ["Devas", "Asuras", "Gopis", "Pandavas"], a: 2 },
+            { cat: "Srimad Bhagavatam", q: "Who was the king of elephants saved by Vishnu from a crocodile?", opts: ["Airavata", "Gajendra", "Garuda", "Nandi"], a: 1 }
         ];
 
         // --- GAME VARIABLES ---
